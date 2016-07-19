@@ -23,8 +23,6 @@ public class BaseRepository {
     private EntityManager em;
     
     
-  //  @Autowired
-    //private SessionFactory sessionFactory;
 
     /**
      * SELECT t.* FROM @Table({type}) as t WHERE t.id={id}
@@ -79,7 +77,6 @@ public class BaseRepository {
         }
         em.flush();
         return entity;
-    	//sessionFactory.getCurrentSession().save(entity);
     	
     }
 
