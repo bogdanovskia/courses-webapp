@@ -13,12 +13,17 @@ import org.springframework.web.servlet.ModelAndView;
 import com.courses.model.Course;
 import com.courses.model.Student;
 import com.courses.persistence.BaseRepository;
+import com.courses.service.CourseService;
+import com.courses.service.StudentService;
 
 @RestController
 public class MainController {
 		
 		@Autowired
-		BaseRepository baseRepository;
+		StudentService studentService;
+		
+		@Autowired
+		CourseService courseService;
 	
 		@RequestMapping(value = "/hello")
 		public ModelAndView hello(){
@@ -38,6 +43,7 @@ public class MainController {
 		@RequestMapping(value = "/CheckCourse")
 		public Student checkCourse(@ModelAttribute("course") Course course, HttpSession session){
 			Student s = (Student) session.getAttribute("student");
+			
 			HashSet<Course> courses = (HashSet<Course>) s.getCourses();
 			courses.add(course);
 			
@@ -53,7 +59,7 @@ public class MainController {
 				System.out.println(student);
 			}
 			
-			baseRepository.saveOrUpdate(s);
+			studentService.save(s);
 			return s;
 		}
 }
