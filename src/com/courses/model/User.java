@@ -48,4 +48,10 @@ public abstract class User extends BaseEntity{
 	
 	
 	public abstract boolean isStudent();
+	
+	
+	@Override
+	public String toString() {
+		return username + " " + firstName + " " + secondName;
+	}
 }

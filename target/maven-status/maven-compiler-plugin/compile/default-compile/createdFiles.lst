@@ -1,9 +1,0 @@
-com/courses/model/User.class
-com/courses/persistence/helper/QueryHelper.class
-com/courses/model/Student.class
-com/courses/persistence/helper/PredicateBuilder.class
-com/courses/persistence/BaseRepository.class
-com/courses/controller/MainController.class
-com/courses/model/BaseEntity.class
-com/courses/model/TestStudentCourse.class
-com/courses/model/Course.class
