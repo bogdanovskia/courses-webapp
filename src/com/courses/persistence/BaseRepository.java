@@ -1,6 +1,8 @@
 package com.courses.persistence;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.courses.model.BaseEntity;
@@ -14,10 +16,15 @@ import java.util.List;
 
 
 @Repository
+@EnableTransactionManagement
 public class BaseRepository {
 
     @PersistenceContext
     private EntityManager em;
+    
+    
+  //  @Autowired
+    //private SessionFactory sessionFactory;
 
     /**
      * SELECT t.* FROM @Table({type}) as t WHERE t.id={id}
@@ -65,7 +72,6 @@ public class BaseRepository {
 
     @Transactional
     public <T extends BaseEntity> T saveOrUpdate(T entity) {
-    	System.out.println(em.isOpen());
         if (entity.id != null && !em.contains(entity)) {
             entity = em.merge(entity);
         } else {
@@ -73,6 +79,8 @@ public class BaseRepository {
         }
         em.flush();
         return entity;
+    	//sessionFactory.getCurrentSession().save(entity);
+    	
     }
 
     @Transactional
