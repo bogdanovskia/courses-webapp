@@ -30,7 +30,7 @@
           p:dataSource-ref="dataSource">
 
         <property name="packagesToScan" value="com.courses.model"/>
-        <property name="persistenceUnitName" value="wp"/>
+        <property name="persistenceUnitName" value="courses"/>
 
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
