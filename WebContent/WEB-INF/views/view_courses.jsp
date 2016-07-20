@@ -6,27 +6,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Select course</title>
+<title>View courses</title>
 </head>
 <body>
-	<form method="POST" action="EnrollToCourse">
-    Select one of our courses: <br/>
 
     <table>
         <c:forEach items="${courses}" var="object">
             <tr>
-                <td><input type="radio" name="course" value="${object.courseName}">${object.courseName} </td>
+                <td>${object.courseName}</td>
             </tr>
 
         </c:forEach>
     </table>
 
-
+	<form method = "get" action="welcome">
+		<button type = "submit">Go back to home page</button>
+	</form>
 
     <hr/>
-    <button value = "submit">Submit</button>
 
 
-</form>
 </body>
 </html>

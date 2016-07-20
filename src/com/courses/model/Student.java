@@ -2,7 +2,9 @@ package com.courses.model;
 import java.util.*;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -16,8 +18,9 @@ public class Student extends User{
 	
 	private String indeks;
 	
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "students")
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "students", fetch = FetchType.EAGER)
 	@JsonBackReference 
+	@Column(nullable = true)
 	private Set<Course> courses;
 	
 	public Student(){
@@ -62,7 +65,7 @@ public class Student extends User{
 	
 	@Override
 	public String toString() {
-		return indeks;
+		return indeks + " " + getPassword() + " " +  getFirstName() + " " + getSecondName();
 	}
 
 	@Override

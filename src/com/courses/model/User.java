@@ -1,8 +1,10 @@
 package com.courses.model;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
 @MappedSuperclass
+@Table(name = "users")
 public abstract class User extends BaseEntity{
 	
 	private String username;

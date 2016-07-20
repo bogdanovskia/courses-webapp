@@ -1,10 +1,12 @@
 package com.courses.service.implementation;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.courses.model.Course;
 import com.courses.model.Student;
 import com.courses.persistence.StudentRepository;
 import com.courses.service.StudentService;
@@ -33,6 +35,11 @@ public class StudentServiceImplementation implements StudentService{
 	@Override
 	public List<Student> getAll() {
 		return studentRepository.getAll();
+	}
+
+	@Override
+	public Set<Course> getCourses(long id) {
+		return studentRepository.getCourses(id);
 	}
 	
 	

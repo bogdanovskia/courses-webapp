@@ -35,4 +35,9 @@ public class CourseServiceImplementation implements  CourseService{
 		return courseRepository.getAll();
 	}
 
+	@Override
+	public Course getByName(String courseName) {
+		return courseRepository.getByName(courseName);
+	}
+
 }

@@ -35,4 +35,9 @@ public class CourseRepositoryImplementation implements CourseRepository{
 		return baseRepository.find(Course.class, null);
 	}
 
+	@Override
+	public Course getByName(String courseName) {
+		return baseRepository.getCourseByName(courseName);
+	}
+
 }
