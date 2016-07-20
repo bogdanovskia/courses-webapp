@@ -3,6 +3,10 @@ package com.courses.seed;
 import java.io.File;
 import java.util.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -11,6 +15,7 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.data.domain.Persistable;
 
 import com.courses.model.Course;
 import com.courses.model.Student;
@@ -63,11 +68,9 @@ public class Seed {
 		courses.add(c4);
 		s5.setCourses(courses);
 		
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-		
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		session.save(s1);
+		File f = new File("/home/user/Web-Project/courses-webapp/WebContent/WEB-INF/spring/mvc-core-config.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("/home/user/Web-Project/courses-webapp/WebContent/WEB-INF/spring/mvc-core-config.xml");
+		//System.out.println(context.containsBean("CourseRepository"));
 	}
 
 }

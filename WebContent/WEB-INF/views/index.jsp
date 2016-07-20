@@ -7,8 +7,8 @@
 <title>Online courses</title>
 </head>
 <body>
-	<h1><a href="hello">Hello</a></h1>
+	<h3><a href="login">Login</a></h3>
 	<br/>
-	<h1><a href="CreateStudent">New student</a></h1>
+	<h3><a href = "CreateStudent">Sign up</a></h3>
 </body>
 </html>

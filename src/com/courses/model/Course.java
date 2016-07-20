@@ -4,6 +4,7 @@ import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -18,7 +19,7 @@ public class Course extends BaseEntity{
 	
 	private String courseName;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
 	@JsonManagedReference 
 	@Column(nullable = true)
@@ -51,7 +52,7 @@ public class Course extends BaseEntity{
 	
 	@Override
 	public String toString() {
-		return courseName;
+		return courseName + " " + super.getId();
 	}
 
 	@Override

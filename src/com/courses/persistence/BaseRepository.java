@@ -1,18 +1,27 @@
 package com.courses.persistence;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.courses.model.BaseEntity;
+import com.courses.model.Course;
+import com.courses.model.Professor;
+import com.courses.model.Student;
+import com.courses.model.User;
 import com.courses.persistence.helper.PredicateBuilder;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.util.List;
 
 
 @Repository
@@ -94,4 +103,59 @@ public class BaseRepository {
         em.flush();
         return changes;
     }
+
+	public Course getCourseByName(String courseName) {
+		Query query =  em.createQuery("select c from Course as c where c.courseName = :courseName");
+		query.setParameter("courseName", courseName);
+		List<Course> courses = query.getResultList();
+		if(!courses.isEmpty()){
+			return courses.get(0);
+		}
+		return null;
+	}
+
+	public boolean isValidUser(String username, String password) {
+		Query query = em.createQuery("select s from Student as s where s.username = :username and s.password = :password");
+	
+		query.setParameter("username", username);
+		query.setParameter("password", password);
+	
+		List<Student> students = query.getResultList();
+		if(!students.isEmpty()){
+			return true;
+		}
+		
+		query = em.createQuery("select p from Professor as p where p.username = :username and p.password = :password");
+		query.setParameter("username", username);
+		query.setParameter("password", password);
+		
+		
+		List<Professor> professors = query.getResultList();
+		if(!professors.isEmpty()){
+			return true;
+		}
+		return false;
+		
+	
+	}
+
+	public <T extends User> T getUserByUsername(String username) {
+		Query query = em.createQuery("select s from Student as s where s.username = :username");
+        query.setParameter("username", username);
+        List<User> users = query.getResultList();
+        if(!users.isEmpty()) return (T) users.get(0);
+
+        query = em.createQuery("select p from Professor as p where p.username = :username");
+        query.setParameter("username", username);
+        List<Professor> admins = query.getResultList();
+        if(!admins.isEmpty()) return (T) admins.get(0);
+
+        return null;
+
+	}
+
+	public Set<Course> getCoursesByStudent(long id) {
+		Student student = getById(Student.class, id);
+		return student.getCourses();
+	}
 }

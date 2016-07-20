@@ -12,4 +12,6 @@ public interface CourseRepository {
 	public Course getById(long id);
 
 	public List<Course> getAll();
+
+	public Course getByName(String courseName);
 }
