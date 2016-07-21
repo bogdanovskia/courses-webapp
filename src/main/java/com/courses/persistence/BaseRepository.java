@@ -155,4 +155,9 @@ public class BaseRepository {
 		Student student = getById(Student.class, id);
 		return student.getCourses();
 	}
+
+	public Set<Course> getCoursesByProfessor(Long id) {
+		Professor p = getById(Professor.class, id);
+		return p.getCourses();
+	}
 }

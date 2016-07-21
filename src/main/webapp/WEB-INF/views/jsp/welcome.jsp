@@ -9,15 +9,26 @@
 	<div align="center">
 		Welcome ${sessionScope.loggedUser.firstName}
 		<form method="get" action="ViewCourses">
-			<button type="submit">Enroll to course</button>
-			<c:if test="${!loggedUser.isStudent()}">
-				<button type="submit" formaction="CreateCourse">Create new
-					course</button>
-			</c:if>
+			<c:choose>
+				<c:when test="${!loggedUser.isStudent()}">
+					<button type="submit" formaction="CreateCourse">Create new
+						course</button>
+				</c:when>
+				<c:otherwise>
+					<button type="submit">Enroll to course</button>
+				</c:otherwise>
+			</c:choose>
 		</form>
 	</div>
 	<form method="get" action="ViewCoursesByUser">
-		<button type="submit">View all your enrolled courses</button>
+		<c:choose>
+			<c:when test="${!loggedUser.isStudent()}">
+				<button type="submit">View all your courses</button>
+			</c:when>
+			<c:otherwise>
+				<button type="submit">View all your enrolled courses</button>
+			</c:otherwise>
+		</c:choose>
 	</form>
 	<div align="right">
 		${sessionScope.loggedUser.username}

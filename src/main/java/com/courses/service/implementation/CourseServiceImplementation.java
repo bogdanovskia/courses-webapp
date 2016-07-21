@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 import com.courses.model.Course;
 import com.courses.persistence.CourseRepository;
 import com.courses.service.CourseService;
+import com.courses.service.UserService;
 
 @Service("courseBo")
 public class CourseServiceImplementation implements CourseService {
 
 	@Autowired
 	CourseRepository courseRepository;
+
+	@Autowired
+	UserService userService;
 
 	public Course save(Course s) {
 		return courseRepository.save(s);

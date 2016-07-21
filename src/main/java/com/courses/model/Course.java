@@ -10,14 +10,18 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "courses")
 public class Course extends BaseEntity {
 
+	@Column(unique = true)
 	private String courseName;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -25,6 +29,20 @@ public class Course extends BaseEntity {
 	@JsonManagedReference
 	@Column(nullable = true)
 	private Set<Student> students;
+
+	@ManyToOne(targetEntity = Professor.class)
+	@JoinColumn(name = "professor_id")
+	@JsonBackReference
+	@NotNull
+	private Professor professor;
+
+	public Professor getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
+	}
 
 	public Course() {
 		courseName = "";
@@ -53,7 +71,7 @@ public class Course extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return courseName + " " + super.getId();
+		return courseName + " by " + professor;
 	}
 
 	@Override

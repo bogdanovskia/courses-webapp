@@ -15,7 +15,7 @@
     <table>
         <c:forEach items="${courses}" var="object">
             <tr>
-                <td><input type="radio" name="course" value="${object.courseName}">${object.courseName} </td>
+                <td><input type="radio" name="course" value="${object.courseName}">${object}</td>
             </tr>
 
         </c:forEach>

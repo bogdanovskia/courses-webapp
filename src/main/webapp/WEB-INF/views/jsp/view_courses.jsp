@@ -13,7 +13,7 @@
     <table>
         <c:forEach items="${courses}" var="object">
             <tr>
-                <td>${object.courseName}</td>
+                <td>${object}</td>
             </tr>
 
         </c:forEach>
