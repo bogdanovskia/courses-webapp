@@ -11,9 +11,9 @@
 <body>
 
     <table>
-        <c:forEach items="${courses}" var="object">
+        <c:forEach items="${courses}" var="object" >
             <tr>
-                <td>${object}</td>
+               <td><a id = "link" href = "ViewCoursesByUser/${object.getId()}">${object}</a></td>
             </tr>
 
         </c:forEach>

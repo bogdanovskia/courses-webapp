@@ -5,12 +5,14 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -30,6 +32,20 @@ public class Course extends BaseEntity {
 	@Column(nullable = true)
 	private Set<Student> students;
 
+	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ElementCollection(targetClass = Lesson.class)
+	@JsonManagedReference
+	@Column(nullable = true)
+	private Set<Lesson> lessons;
+
+	public Set<Lesson> getLessons() {
+		return lessons;
+	}
+
+	public void setLessons(Set<Lesson> lessons) {
+		this.lessons = lessons;
+	}
+
 	@ManyToOne(targetEntity = Professor.class)
 	@JoinColumn(name = "professor_id")
 	@JsonBackReference
@@ -47,6 +63,7 @@ public class Course extends BaseEntity {
 	public Course() {
 		courseName = "";
 		students = new HashSet<Student>();
+		lessons = new HashSet<Lesson>();
 	}
 
 	public Course(String courseName) {
