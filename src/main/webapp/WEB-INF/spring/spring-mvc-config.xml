@@ -14,7 +14,7 @@
 	<context:component-scan base-package="com.courses" />
 
 	<import resource="mvc-view-config.xml" />
-	
+
 	<mvc:default-servlet-handler />
 
 	<bean id="conversionService"
@@ -25,15 +25,18 @@
 	<!-- - Message source for this context, loaded from localized "messages_xx" 
 		files. - Files are stored inside src/main/resources -->
 	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource"
-		p:basename="messages/messages" />
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>classpath*:messages</value>
+		</property>
+	</bean>
 
-	
+
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
 	<mvc:annotation-driven />
-	
+
 	<!-- - This bean resolves specific workTypes of exceptions to corresponding 
 		logical - view names for error views. -->
 	<bean
@@ -49,5 +52,8 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
+
+
+
 
 </beans>

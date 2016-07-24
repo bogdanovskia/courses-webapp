@@ -1,5 +1,6 @@
 package com.courses.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,7 +12,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "lessons")
 public class Lesson extends BaseEntity implements Comparable<Lesson> {
+	
+	@NotNull
+	private int lessonOrder;
 
+	@NotNull
+	@Column(unique = true)
 	private String title;
 
 	@ManyToOne(targetEntity = Course.class)
@@ -20,7 +26,18 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 	@NotNull
 	private Course course;
 
+	
+
+	public int getLessonOrder() {
+		return lessonOrder;
+	}
+
+	public void setLessonOrder(int lessonOrder) {
+		this.lessonOrder = lessonOrder;
+	}
+
 	public Lesson() {
+		lessonOrder = 0;
 		title = "";
 		course = null;
 	}
@@ -40,16 +57,14 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
+	
 
 	@Override
 	public String toString() {
 		return title;
 	}
 
-	public int compareTo(Lesson o) {
-		return this.title.compareTo(o.getTitle());
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -74,6 +89,13 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	public int compareTo(Lesson o) {
+		if(Integer.compare(lessonOrder, o.getLessonOrder()) == 0){
+			return title.compareTo(o.getTitle());
+		}
+		return Integer.compare(lessonOrder, o.getLessonOrder());
 	}
 
 }

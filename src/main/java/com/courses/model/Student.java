@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name = "students")
 public class Student extends User {
 
-	private String indeks;
 
 	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "students", fetch = FetchType.EAGER)
 	@JsonBackReference
@@ -28,24 +27,8 @@ public class Student extends User {
 		courses = new HashSet<Course>();
 	}
 
-	public Student(String username, String password, String firstName, String secondName) {
-		super(username, password, firstName, secondName);
-		courses = new HashSet<Course>();
-	}
 
-	public Student(String username, String password, String firstName, String secondName, String index) {
-		super(username, password, firstName, secondName);
-		this.indeks = index;
-		courses = new HashSet<Course>();
-	}
 
-	public String getIndex() {
-		return indeks;
-	}
-
-	public void setIndex(String index) {
-		this.indeks = index;
-	}
 
 	@Override
 	public boolean isStudent() {
@@ -62,16 +45,22 @@ public class Student extends User {
 
 	@Override
 	public String toString() {
-		return indeks + " " + getPassword() + " " + getFirstName() + " " + getSecondName();
+		return getUsername() + " " + getFirstName() + " " + getSecondName();
 	}
+
+
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((indeks == null) ? 0 : indeks.hashCode());
+		result = prime * result + ((courses == null) ? 0 : courses.hashCode());
 		return result;
 	}
+
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -82,12 +71,13 @@ public class Student extends User {
 		if (getClass() != obj.getClass())
 			return false;
 		Student other = (Student) obj;
-		if (indeks == null) {
-			if (other.indeks != null)
+		if (courses == null) {
+			if (other.courses != null)
 				return false;
-		} else if (!indeks.equals(other.indeks))
+		} else if (!courses.equals(other.courses))
 			return false;
 		return true;
 	}
 
+	
 }

@@ -1,7 +1,11 @@
 package com.courses.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,15 +41,9 @@ public class Course extends BaseEntity {
 	@ElementCollection(targetClass = Lesson.class)
 	@JsonManagedReference
 	@Column(nullable = true)
-	private Set<Lesson> lessons;
+	private List<Lesson> lessons;
 
-	public Set<Lesson> getLessons() {
-		return lessons;
-	}
-
-	public void setLessons(Set<Lesson> lessons) {
-		this.lessons = lessons;
-	}
+	
 
 	@ManyToOne(targetEntity = Professor.class)
 	@JoinColumn(name = "professor_id")
@@ -63,7 +62,7 @@ public class Course extends BaseEntity {
 	public Course() {
 		courseName = "";
 		students = new HashSet<Student>();
-		lessons = new HashSet<Lesson>();
+		lessons = new ArrayList<Lesson>();
 	}
 
 	public Course(String courseName) {
@@ -85,7 +84,19 @@ public class Course extends BaseEntity {
 	public void setStudents(Set<Student> students) {
 		this.students = students;
 	}
+	
+	
 
+
+	public List<Lesson> getLessons() {
+		Collections.sort(lessons);
+		return lessons;
+	}
+
+	public void setLessons(List<Lesson> lessons) {
+		this.lessons = lessons;
+	}
+	
 	@Override
 	public String toString() {
 		return courseName + " by " + professor;

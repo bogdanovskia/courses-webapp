@@ -9,6 +9,6 @@
 <body>
 	<h3><a href="login">Login</a></h3>
 	<br/>
-	<h3><a href = "CreateStudent">Sign up</a></h3>
+	<h3><a href = "newuser">Sign up</a></h3>
 </body>
 </html>

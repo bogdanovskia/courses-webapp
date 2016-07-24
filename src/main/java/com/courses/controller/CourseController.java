@@ -104,6 +104,7 @@ public class CourseController<T extends User> {
 	@RequestMapping(value = "/ViewCoursesByUser/{id}")
 	public ModelAndView viewCourse(@PathVariable("id") long id) {
 		Course course = courseService.getById(id);
+		System.out.println(course.getLessons());
 		ModelAndView modelAndView = new ModelAndView("view_course");
 		modelAndView.addObject("course", course);
 		return modelAndView;
@@ -124,7 +125,7 @@ public class CourseController<T extends User> {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/ViewCoursesByUser/{id}/NewLesson")
+	@RequestMapping(value = "/ViewCoursesByUser/{id}/newlesson")
 	public void appendLessonToCourse(@PathVariable("id") long id, @ModelAttribute(value = "lesson") Lesson lesson,
 			HttpServletResponse response) throws IOException {
 		if (lesson.getTitle().equals("")) {

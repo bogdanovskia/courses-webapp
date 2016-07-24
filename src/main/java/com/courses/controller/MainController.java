@@ -3,23 +3,24 @@ package com.courses.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.courses.service.CourseService;
 import com.courses.service.StudentService;
-import com.courses.service.UserService;
 
-@RestController
+@Controller
 public class MainController {
+	
+	public final String Student = "STUDENT";
+	public final String Professor = "PROFESSOR";
 
 	@Autowired
 	StudentService studentService;
 
-	@Autowired
-	UserService userService;
 
 	@Autowired
 	CourseService courseService;
@@ -32,7 +33,23 @@ public class MainController {
 		return new ModelAndView("index");
 
 	}
-
+	
+	
+	@RequestMapping(value = "/newuser", method = RequestMethod.GET)
+	public ModelAndView createUser() {
+		return new ModelAndView("create_user");
+	}
+	
+	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
+	public String newUser(@RequestParam(value = "type") String type){
+		if(type.equals(Student)){
+			return "redirect:/newstudent";
+		}
+		else{
+			return "redirect:/newprofessor";
+		}
+	}
+	
 	// @RequestMapping(value = "/CreateStudent")
 	// public ModelAndView createStudent() {
 	// return new ModelAndView("create_student", "student", new Student());

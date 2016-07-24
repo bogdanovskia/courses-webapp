@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>New teacher</title>
 <style type="text/css">
 .error {
 	color: #ff0000;
@@ -17,8 +17,8 @@
 </head>
 <body>
 
-	<springForm:form method="POST" commandName="student"
-		action="newstudent">
+	<springForm:form method="POST" commandName="professor"
+		action="newprofessor">
 		<table>
 			<tr>
 				<td>Username:</td>
@@ -66,7 +66,7 @@
 			</tr>
 			
 			<tr>
-				<td colspan="3"><input type="submit" value="Save student"></td>
+				<td colspan="3"><input type="submit" value="Save teacher"></td>
 			</tr>
 		</table>
 
