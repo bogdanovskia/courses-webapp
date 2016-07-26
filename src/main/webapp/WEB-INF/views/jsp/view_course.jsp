@@ -13,7 +13,7 @@
 	<table>
 		<c:forEach items="${course.getLessons()}" var="lesson">
 			<tr>
-				<td>${lesson}</td>
+				<td><a href = "viewlesson/${lesson.getId()}">${lesson}</a></td>
 			</tr>
 		</c:forEach>
 	</table>

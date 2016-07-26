@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.courses.model.BaseEntity;
 import com.courses.model.Course;
+import com.courses.model.Lesson;
+import com.courses.model.LessonDocument;
 import com.courses.model.Professor;
 import com.courses.model.Student;
 import com.courses.model.User;
@@ -159,5 +161,10 @@ public class BaseRepository {
 	public Set<Course> getCoursesByProfessor(Long id) {
 		Professor p = getById(Professor.class, id);
 		return p.getCourses();
+	}
+
+	public List<LessonDocument> getDocumentsByLesson(long id) {
+		Lesson l = getById(Lesson.class, id);
+		return l.getLessonDocuments();
 	}
 }

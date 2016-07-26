@@ -1,9 +1,15 @@
 package com.courses.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "lessons")
 public class Lesson extends BaseEntity implements Comparable<Lesson> {
-	
+
 	@NotNull
 	private int lessonOrder;
 
@@ -26,7 +32,8 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 	@NotNull
 	private Course course;
 
-	
+	@OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<LessonDocument> lessonDocuments = new ArrayList<LessonDocument>();
 
 	public int getLessonOrder() {
 		return lessonOrder;
@@ -57,14 +64,12 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	
 
 	@Override
 	public String toString() {
 		return title;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -91,8 +96,16 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 		return true;
 	}
 
+	public List<LessonDocument> getLessonDocuments() {
+		return lessonDocuments;
+	}
+
+	public void setLessonDocuments(List<LessonDocument> lessonDocuments) {
+		this.lessonDocuments = lessonDocuments;
+	}
+
 	public int compareTo(Lesson o) {
-		if(Integer.compare(lessonOrder, o.getLessonOrder()) == 0){
+		if (Integer.compare(lessonOrder, o.getLessonOrder()) == 0) {
 			return title.compareTo(o.getTitle());
 		}
 		return Integer.compare(lessonOrder, o.getLessonOrder());
