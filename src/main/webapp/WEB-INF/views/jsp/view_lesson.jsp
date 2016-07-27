@@ -24,21 +24,37 @@
 		<tbody>
 			<c:forEach items="${lesson.getLessonDocuments()}" var="doc"
 				varStatus="counter">
-				<tr>
-					<td>${counter.index + 1}</td>
-					<td>${doc.name}</td>
-					<td>${doc.type}</td>
-					<td>${doc.description}</td>
-					<td><a
-						href="<c:url value='${lesson.getId()}/download-document-${doc.getId()}' />"
-						class="btn btn-success custom-width">download</a></td>
-					<c:if test="${!sessionScope.loggedUser.isStudent()}"><td><a
-						href="<c:url value='${lesson.getId()}/delete-document-${doc.getId()}' />"
-						class="btn btn-danger custom-width">delete</a></td></c:if>
-				</tr>
+
+				<c:if test="${!doc.getType().equals('video/mp4') || doc.getType().equals('video/mp4') && !sessionScope.loggedUser.isStudent()}">
+
+					<tr>
+						<td>${counter.index + 1}</td>
+						<td>${doc.name}</td>
+						<td>${doc.type}</td>
+						<td>${doc.description}</td>
+						<td><a
+							href="<c:url value='${lesson.getId()}/download-document-${doc.getId()}' />"
+							class="btn btn-success custom-width">download</a></td>
+						<c:if test="${!sessionScope.loggedUser.isStudent()}">
+							<td><a
+								href="<c:url value='${lesson.getId()}/delete-document-${doc.getId()}' />"
+								class="btn btn-danger custom-width">delete</a></td>
+						</c:if>
+					</tr>
+
+				</c:if>
 			</c:forEach>
 		</tbody>
 	</table>
+
+	<c:forEach items="${videos}" var="video">
+		<video width="320" height="240" controls> <source
+			src="${lesson.getId()}/download-document-${video.getId()}"
+			type="video/mp4"></video>
+		<br />
+		<br />
+	</c:forEach>
+
 	<c:if test="${!sessionScope.loggedUser.isStudent()}">
 		<div class="panel panel-default">
 

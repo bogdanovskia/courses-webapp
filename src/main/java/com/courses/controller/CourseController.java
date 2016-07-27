@@ -169,6 +169,8 @@ public class CourseController<T extends User> {
 
 		ModelAndView modelAndView = new ModelAndView("view_lesson");
 		modelAndView.addObject("lesson", lesson);
+		System.out.println(lesson.getVideos().size());
+		modelAndView.addObject("videos", lesson.getVideos());
 		modelAndView.addObject("fileBucket", new FileBucket());
 		return modelAndView;
 	}
@@ -206,6 +208,7 @@ public class CourseController<T extends User> {
 		lessonDocument.setName(multipartFile.getOriginalFilename());
 		lessonDocument.setDescription(fileBucket.getDescription());
 		lessonDocument.setType(multipartFile.getContentType());
+		System.out.println(lessonDocument.getType());
 		lessonDocument.setContent(multipartFile.getBytes());
 		lessonDocument.setLesson(lesson);
 

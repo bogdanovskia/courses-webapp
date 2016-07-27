@@ -111,4 +111,13 @@ public class Lesson extends BaseEntity implements Comparable<Lesson> {
 		return Integer.compare(lessonOrder, o.getLessonOrder());
 	}
 
+	public List<LessonDocument> getVideos() {
+		List<LessonDocument> videos = new ArrayList<LessonDocument>();
+		for (LessonDocument l : lessonDocuments) {
+			if (l.getType().equals("video/mp4")) {
+				videos.add(l);
+			}
+		}
+		return videos;
+	}
 }

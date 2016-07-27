@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "documents")
 public class LessonDocument extends BaseEntity {
+
 	@Column(nullable = false)
 	private String name;
 
