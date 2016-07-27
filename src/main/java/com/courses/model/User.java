@@ -2,6 +2,7 @@ package com.courses.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -20,6 +21,7 @@ public abstract class User extends BaseEntity {
 
 	@NotEmpty(message = "Username cannot be empty!")
 	@Size(min = 4, max = 10, message = "Username must between 4 and 10 letters")
+	@Column(unique = true)
 	protected String username;
 
 	@NotEmpty(message = "Password field cannot be empty!")
@@ -30,13 +32,13 @@ public abstract class User extends BaseEntity {
 	@Size(min = 4, max = 20, message = "First name must be between 4 and 20 letters long")
 	protected String firstName;
 
-	@NotEmpty(message = "Second name cannot be empty") 
+	@NotEmpty(message = "Second name cannot be empty")
 	@Size(min = 4, max = 20, message = "Second name must be between 4 and 20 letters long")
 	protected String secondName;
 
 	@NotEmpty(message = "Email cannot be empty")
-	@Email
-	protected String email; 
+	@Email()
+	protected String email;
 
 	@NotNull(message = "Age cannot be empty")
 	@Min(value = 15, message = "Must be older than 15 years")
@@ -49,16 +51,13 @@ public abstract class User extends BaseEntity {
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	@NotNull(message = "Birthday cannot be empty")
 	@Past(message = "Date must be in the past")
-	
+
 	protected Date birthday;
 
 	public enum Gender {
 		MALE, FEMALE
 	}
 
-	
-	
-	
 	public String getUsername() {
 		return username;
 	}

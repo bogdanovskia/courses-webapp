@@ -13,13 +13,13 @@
     <table>
         <c:forEach items="${courses}" var="object" >
             <tr>
-               <td><a id = "link" href = "ViewCoursesByUser/${object.getId()}">${object}</a></td>
+               <td><a id = "link" href = "${object.getId()}">${object}</a></td>
             </tr>
 
         </c:forEach>
     </table>
 
-	<form method = "get" action="welcome">
+	<form method = "get" action="../welcome">
 		<button type = "submit">Go back to home page</button>
 	</form>
 

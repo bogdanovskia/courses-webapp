@@ -18,11 +18,11 @@
 		</c:forEach>
 	</table>
 	<c:if test="${!loggedUser.isStudent()}">
-		<form action="${course.getId()}/CreateLesson" method="get">
+		<form action="${course.getId()}/create-lesson" method="get">
 			<button type="submit">Create new lesson</button>
 		</form>
 	</c:if>
-	<form method="get" action="../ViewCoursesByUser">
+	<form method="get" action="../view-courses-user/">
 		<button type="submit">View courses!</button>
 	</form>
 </body>

@@ -9,7 +9,7 @@
 <title>Select course</title>
 </head>
 <body>
-	<form method="POST" action="EnrollToCourse">
+	<form method="GET" action="view-courses/enroll-to-course">
     Select one of our courses: <br/>
 
     <table>

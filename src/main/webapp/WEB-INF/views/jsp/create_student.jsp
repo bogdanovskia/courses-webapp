@@ -17,7 +17,7 @@
 </head>
 <body>
 
-	<springForm:form method="POST" commandName="student"
+	<springForm:form method="POST" commandName="user"
 		action="newstudent">
 		<table>
 			<tr>

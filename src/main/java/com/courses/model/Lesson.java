@@ -13,16 +13,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "lessons")
 public class Lesson extends BaseEntity implements Comparable<Lesson> {
 
-	@NotNull
+	@NotNull(message = "Please type the order of this lesson.")
 	private int lessonOrder;
 
-	@NotNull
+	@NotEmpty(message = "Please type the name of the lesson.")
 	@Column(unique = true)
 	private String title;
 

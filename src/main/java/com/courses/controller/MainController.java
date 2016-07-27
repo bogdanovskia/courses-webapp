@@ -14,13 +14,12 @@ import com.courses.service.StudentService;
 
 @Controller
 public class MainController {
-	
+
 	public final String Student = "STUDENT";
 	public final String Professor = "PROFESSOR";
 
 	@Autowired
 	StudentService studentService;
-
 
 	@Autowired
 	CourseService courseService;
@@ -33,23 +32,33 @@ public class MainController {
 		return new ModelAndView("index");
 
 	}
-	
-	
+
+	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
+	public ModelAndView welcome() {
+		return new ModelAndView("welcome");
+	}
+
 	@RequestMapping(value = "/newuser", method = RequestMethod.GET)
 	public ModelAndView createUser() {
 		return new ModelAndView("create_user");
 	}
-	
+
 	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
-	public String newUser(@RequestParam(value = "type") String type){
-		if(type.equals(Student)){
+	public String newUser(@RequestParam(value = "type") String type) {
+		if (type.equals(Student)) {
 			return "redirect:/newstudent";
-		}
-		else{
+		} else {
 			return "redirect:/newprofessor";
 		}
 	}
-	
+
+	@RequestMapping(value = "/view-courses")
+	public ModelAndView viewCourses() {
+		ModelAndView modelAndView = new ModelAndView("select_course");
+		modelAndView.addObject("courses", courseService.getAll());
+		return modelAndView;
+	}
+
 	// @RequestMapping(value = "/CreateStudent")
 	// public ModelAndView createStudent() {
 	// return new ModelAndView("create_student", "student", new Student());

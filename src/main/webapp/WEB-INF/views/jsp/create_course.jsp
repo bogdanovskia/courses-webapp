@@ -1,19 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form"
+	prefix="springForm"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Create course</title>
+<style type="text/css">
+.error {
+	color: #ff0000;
+	font-style: italic;
+	font-weight: bold;
+}
+</style>
 </head>
 <body>
-	<form:form id="createCourseFormId" action="CheckCourse" modelAttribute="course">
-		<form:label path="courseName">Enter name of the course:</form:label>
-		<form:input id="courseName" name="courseName" path="courseName" />
-		<br />
-		<br />
-		<button type="submit">Submit</button>
-	</form:form>
+	<springForm:form id="createCourseFormId" action="create-course"
+		commandName="course" method="POST">
+		<table>
+			<tr>
+				<td>Course name:</td>
+				<td><springForm:input path="courseName" /></td>
+				<td><springForm:errors path="courseName" cssClass="error" /></td>
+			</tr>
+			<tr>
+				<td colspan="3"><input type="submit" value="Save course"></td>
+			</tr>
+		</table>
+	</springForm:form>
 </body>
 </html>

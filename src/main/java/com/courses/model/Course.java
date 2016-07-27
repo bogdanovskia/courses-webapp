@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "courses")
 public class Course extends BaseEntity {
 
+	@NotEmpty(message = "Name of the course cannot be empty. Please type the name of the course.")
 	@Column(unique = true)
 	private String courseName;
 
@@ -42,8 +43,6 @@ public class Course extends BaseEntity {
 	@JsonManagedReference
 	@Column(nullable = true)
 	private List<Lesson> lessons;
-
-	
 
 	@ManyToOne(targetEntity = Professor.class)
 	@JoinColumn(name = "professor_id")
@@ -84,9 +83,6 @@ public class Course extends BaseEntity {
 	public void setStudents(Set<Student> students) {
 		this.students = students;
 	}
-	
-	
-
 
 	public List<Lesson> getLessons() {
 		Collections.sort(lessons);
@@ -96,7 +92,7 @@ public class Course extends BaseEntity {
 	public void setLessons(List<Lesson> lessons) {
 		this.lessons = lessons;
 	}
-	
+
 	@Override
 	public String toString() {
 		return courseName + " by " + professor;

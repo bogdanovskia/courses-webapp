@@ -31,4 +31,8 @@ public class LessonRepositoryImplementation implements LessonRepository {
 		return baseRepository.find(Lesson.class, null);
 	}
 
+	public Lesson getByName(String title) {
+		return baseRepository.getLessonByName(title);
+	}
+
 }

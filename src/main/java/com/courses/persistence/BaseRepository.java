@@ -167,4 +167,15 @@ public class BaseRepository {
 		Lesson l = getById(Lesson.class, id);
 		return l.getLessonDocuments();
 	}
+
+	public Lesson getLessonByName(String title) {
+		Query query = em.createQuery("select l from Lesson as l where l.title = :title");
+		query.setParameter("title", title);
+
+		List<Lesson> lessons = query.getResultList();
+		if (lessons.isEmpty()) {
+			return null;
+		}
+		return lessons.get(0);
+	}
 }

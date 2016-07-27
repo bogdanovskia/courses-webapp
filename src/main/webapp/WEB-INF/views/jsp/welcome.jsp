@@ -8,10 +8,10 @@
 <body>
 	<div align="center">
 		Welcome ${sessionScope.loggedUser.firstName}
-		<form method="get" action="ViewCourses">
+		<form method="get" action="view-courses">
 			<c:choose>
 				<c:when test="${!loggedUser.isStudent()}">
-					<button type="submit" formaction="CreateCourse">Create new
+					<button type="submit" formaction="create-course">Create new
 						course</button>
 				</c:when>
 				<c:otherwise>
@@ -20,7 +20,7 @@
 			</c:choose>
 		</form>
 	</div>
-	<form method="get" action="ViewCoursesByUser">
+	<form method="get" action="view-courses-user/">
 		<c:choose>
 			<c:when test="${!loggedUser.isStudent()}">
 				<button type="submit">View all your courses</button>

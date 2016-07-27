@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name = "students")
 public class Student extends User {
 
-
 	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "students", fetch = FetchType.EAGER)
 	@JsonBackReference
 	@Column(nullable = true)
@@ -26,9 +25,6 @@ public class Student extends User {
 		super();
 		courses = new HashSet<Course>();
 	}
-
-
-
 
 	@Override
 	public boolean isStudent() {
@@ -48,36 +44,14 @@ public class Student extends User {
 		return getUsername() + " " + getFirstName() + " " + getSecondName();
 	}
 
-
-
-
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((courses == null) ? 0 : courses.hashCode());
-		return result;
+		return super.hashCode();
 	}
-
-
-
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Student other = (Student) obj;
-		if (courses == null) {
-			if (other.courses != null)
-				return false;
-		} else if (!courses.equals(other.courses))
-			return false;
-		return true;
+		return super.equals(obj);
 	}
 
-	
 }

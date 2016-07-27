@@ -31,4 +31,8 @@ public class LessonServiceImplementation implements LessonService {
 		return lessonRepository.getAll();
 	}
 
+	public Lesson getByName(String title) {
+		return lessonRepository.getByName(title);
+	}
+
 }

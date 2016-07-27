@@ -8,10 +8,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>New lesson for course ${course.getCourseName()}</title>
+<style type="text/css">
+.error {
+	color: #ff0000;
+	font-style: italic;
+	font-weight: bold;
+}
+</style>
 </head>
 <body>
 
-	<springForm:form action = "newlesson" method = "post" commandName="lesson">
+	<springForm:form action="create-lesson" method="post"
+		commandName="lesson">
 		<table>
 			<tr>
 				<td>Enter title of the lesson:</td>
@@ -23,15 +31,15 @@
 				<td><springForm:input path="lessonOrder" /></td>
 				<td><springForm:errors path="lessonOrder" cssClass="error" /></td>
 			</tr>
-			</table>
-			<button type = "submit">Submit</button>
+		</table>
+		<button type="submit">Submit</button>
 	</springForm:form>
 
-		
-		<br/>
-		<br/>
-		
-		
-		
+
+	<br />
+	<br />
+
+
+
 </body>
 </html>
