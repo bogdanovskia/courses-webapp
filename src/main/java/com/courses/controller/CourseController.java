@@ -76,12 +76,24 @@ public class CourseController<T extends User> {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/{id}")
+	@RequestMapping(value = "{id}")
 	public ModelAndView viewCourse(@PathVariable("id") long id) {
 		Course course = courseService.getById(id);
 		ModelAndView modelAndView = new ModelAndView("view_course");
 		modelAndView.addObject("course", course);
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/{id}/delete")
+	public String deleteCourse(@PathVariable("id") long id, HttpSession session) {
+		Course course = courseService.getById(id);
+
+		for (Lesson l : course.getLessons()) {
+			lessonDocumentService.deleteAllOfLesson(l);
+		}
+		lessonService.deleteAllOfCourse(course);
+		courseService.delete(course);
+		return "redirect:/view-courses-user/";
 	}
 
 	@RequestMapping(value = "/{id}/create-lesson")
@@ -104,9 +116,6 @@ public class CourseController<T extends User> {
 			@ModelAttribute(value = "lesson") @Validated Lesson lesson, BindingResult result,
 			HttpServletResponse response) throws IOException {
 		if (result.hasErrors()) {
-			System.out.println();
-			System.out.println("DA");
-			System.out.println();
 			return "create_lesson";
 		}
 
@@ -117,8 +126,8 @@ public class CourseController<T extends User> {
 		return "redirect:/view-courses-user/" + id;
 	}
 
-	@RequestMapping(value = "/viewlesson/{l-id}", method = RequestMethod.GET)
-	public ModelAndView viewLesson(@PathVariable("l-id") long lid) {
+	@RequestMapping(value = "/{id}/viewlesson/{l-id}", method = RequestMethod.GET)
+	public ModelAndView viewLesson(@PathVariable("id") long id, @PathVariable("l-id") long lid) {
 		Lesson lesson = lessonService.getById(lid);
 
 		ModelAndView modelAndView = new ModelAndView("view_lesson");
@@ -129,9 +138,18 @@ public class CourseController<T extends User> {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/viewlesson/{l-id}", method = RequestMethod.POST)
-	public String uploadDocument(@PathVariable("l-id") int lid, @Valid FileBucket fileBucket, BindingResult result,
-			Model model) throws IOException {
+	@RequestMapping(value = "/{id}/viewlesson/{lid}/delete-lesson")
+	public String deleteLesson(@PathVariable("id") long id, @PathVariable("lid") long lid) {
+		Lesson lesson = lessonService.getById(lid);
+		lessonDocumentService.deleteAllOfLesson(lesson);
+		lessonService.delete(lesson);
+
+		return "redirect:/view-courses-user/" + id;
+	}
+
+	@RequestMapping(value = "/{id}/viewlesson/{l-id}", method = RequestMethod.POST)
+	public String uploadDocument(@PathVariable("id") long id, @PathVariable("l-id") int lid,
+			@Valid FileBucket fileBucket, BindingResult result, Model model) throws IOException {
 		Lesson lesson = lessonService.getById(lid);
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
@@ -150,7 +168,7 @@ public class CourseController<T extends User> {
 
 			saveDocument(fileBucket, lesson);
 
-			return "redirect:/view-courses-user/viewlesson/" + lesson.getId();
+			return "redirect:/view-courses-user/" + id + "/viewlesson/" + lesson.getId();
 		}
 	}
 
@@ -169,9 +187,9 @@ public class CourseController<T extends User> {
 		lessonDocumentService.saveDocument(lessonDocument);
 	}
 
-	@RequestMapping(value = "/viewlesson/{l-id}/download-document-{d-id}")
-	public String downloadDocument(@PathVariable("d-id") int did, @PathVariable("l-id") int lid,
-			HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/{id}/viewlesson/{l-id}/download-document-{d-id}")
+	public String downloadDocument(@PathVariable("id") long id, @PathVariable("d-id") int did,
+			@PathVariable("l-id") int lid, HttpServletResponse response) throws IOException {
 
 		LessonDocument lessonDocument = lessonDocumentService.findById(did);
 		response.setContentType(lessonDocument.getType());
@@ -180,12 +198,13 @@ public class CourseController<T extends User> {
 
 		FileCopyUtils.copy(lessonDocument.getContent(), response.getOutputStream());
 
-		return "redirect:/view-courses-user/viewlesson/" + lid;
+		return "redirect:/view-courses-user/" + id + "/viewlesson/" + lid;
 	}
 
-	@RequestMapping(value = "/viewlesson/{l-id}/delete-document-{d-id}")
-	public String deleteDocument(@PathVariable("l-id") int lid, @PathVariable("d-id") int did) {
+	@RequestMapping(value = "/{id}/viewlesson/{l-id}/delete-document-{d-id}")
+	public String deleteDocument(@PathVariable("id") long id, @PathVariable("l-id") int lid,
+			@PathVariable("d-id") int did) {
 		lessonDocumentService.deleteById(did);
-		return "redirect:/view-courses-user/viewlesson/" + lid;
+		return "redirect:/view-courses-user/" + id + "/viewlesson/" + lid;
 	}
 }

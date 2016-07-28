@@ -100,8 +100,7 @@
 			</div>
 		</div>
 	</c:if>
-	<form action="../${lesson.getCourse().getId() }">
-		<button type="submit">Back to course page</button>
-	</form>
+	<a href = "${lesson.getId()}/delete-lesson">Delete lesson</a>
+	<a href = "../../${lesson.getCourse().getId()}">Back to course page</a>
 </body>
 </html>

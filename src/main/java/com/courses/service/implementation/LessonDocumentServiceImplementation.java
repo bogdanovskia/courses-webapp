@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
 import com.courses.persistence.LessonDocumentRepository;
 import com.courses.service.LessonDocumentService;
@@ -42,6 +43,15 @@ public class LessonDocumentServiceImplementation implements LessonDocumentServic
 			}
 		}
 		return false;
+	}
+
+	public void deleteAllOfLesson(Lesson l) {
+		List<LessonDocument> lessonDocuments = lessonDocumentRepository.findAll();
+		for (LessonDocument lesson : lessonDocuments) {
+			if (lesson.getLesson().equals(l)) {
+				lessonDocumentRepository.deleteById(lesson.getId());
+			}
+		}
 	}
 
 }

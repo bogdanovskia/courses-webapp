@@ -28,7 +28,10 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 	ProfessorRepository professorRepository;
 
 	public int delete(User s) {
-		return userRepository.delete(s);
+		if (s.isStudent()) {
+			return studentRepository.delete((Student) s);
+		} else
+			return professorRepository.delete((Professor) s);
 	}
 
 	public User getById(long id) {
@@ -57,6 +60,22 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 			return (T) studentRepository.save((Student) s);
 		}
 		return (T) professorRepository.save((Professor) s);
+	}
+
+	public T getById(long id, String string) {
+		if (string.equals("Student")) {
+			return (T) studentRepository.getById(id);
+		} else
+			return (T) professorRepository.getById(id);
+	}
+
+	public void deleteCourseFromProfessor(Professor p, Course course) {
+		p.getCourses().remove(course);
+		System.out.println();
+		System.out.println("DAAAAA");
+		System.out.println(p.getCourses());
+		System.out.println();
+		professorRepository.save(p);
 	}
 
 }

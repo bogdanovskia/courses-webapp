@@ -14,4 +14,5 @@ public interface LessonRepository {
 	public List<Lesson> getAll();
 
 	public Lesson getByName(String title);
+
 }

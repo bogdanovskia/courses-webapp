@@ -3,11 +3,11 @@ package com.courses.controller;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,7 +48,7 @@ public class StudentController<T extends User> {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/newstudent", method = RequestMethod.POST)
-	public String checkStudent(@ModelAttribute("user") @Valid Student student, BindingResult result,
+	public String checkStudent(@ModelAttribute("user") @Validated Student student, BindingResult result,
 			HttpSession session) {
 
 		if (result.hasErrors()) {
@@ -95,5 +95,30 @@ public class StudentController<T extends User> {
 		} else {
 			throw new Exception("Failed to save new student!");
 		}
+	}
+
+	@RequestMapping(value = "/user/update/student")
+	public ModelAndView updateStudent(HttpSession session) {
+		Student s = (Student) session.getAttribute("loggedUser");
+		return new ModelAndView("update_student", "user", s);
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/user/update/student", method = RequestMethod.POST)
+	public String updatedUser(@ModelAttribute("user") @Validated Student user, BindingResult result,
+			HttpSession session) {
+
+		if (result.hasErrors()) {
+			return "update_student";
+		}
+
+		Student formerUser = (Student) session.getAttribute("loggedUser");
+
+		Student student = (Student) userService.getById(formerUser.getId(), "Student");
+		user.id = student.getId();
+		userService.save((T) user);
+		session.setAttribute("loggedUser", user);
+
+		return "redirect:/user";
 	}
 }

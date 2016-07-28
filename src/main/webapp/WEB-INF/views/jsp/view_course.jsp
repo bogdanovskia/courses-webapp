@@ -13,7 +13,7 @@
 	<table>
 		<c:forEach items="${course.getLessons()}" var="lesson">
 			<tr>
-				<td><a href = "viewlesson/${lesson.getId()}">${lesson}</a></td>
+				<td><a href = "${course.getId()}/viewlesson/${lesson.getId()}">${lesson}</a></td>
 			</tr>
 		</c:forEach>
 	</table>
@@ -22,8 +22,14 @@
 			<button type="submit">Create new lesson</button>
 		</form>
 	</c:if>
+	
+	<c:if test="${!loggedUser.isStudent()}">
+		<a href = "${course.getId()}/delete">Delete course</a>
+	</c:if>
+	
 	<form method="get" action="../view-courses-user/">
 		<button type="submit">View courses!</button>
 	</form>
+	
 </body>
 </html>

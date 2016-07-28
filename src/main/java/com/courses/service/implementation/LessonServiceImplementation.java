@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.courses.model.Course;
 import com.courses.model.Lesson;
 import com.courses.persistence.LessonRepository;
 import com.courses.service.LessonService;
@@ -33,6 +34,16 @@ public class LessonServiceImplementation implements LessonService {
 
 	public Lesson getByName(String title) {
 		return lessonRepository.getByName(title);
+	}
+
+	public void deleteAllOfCourse(Course course) {
+		List<Lesson> lessons = lessonRepository.getAll();
+		for (Lesson lesson : lessons) {
+			if (lesson.getCourse().equals(course)) {
+				lessonRepository.delete(lesson);
+			}
+		}
+
 	}
 
 }

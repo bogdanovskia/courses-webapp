@@ -2,6 +2,7 @@ package com.courses.service;
 
 import java.util.List;
 
+import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
 
 public interface LessonDocumentService {
@@ -16,5 +17,7 @@ public interface LessonDocumentService {
 	int deleteById(long id);
 
 	boolean containsName(String originalFilename, List<LessonDocument> lessonDocuments);
+
+	void deleteAllOfLesson(Lesson l);
 
 }

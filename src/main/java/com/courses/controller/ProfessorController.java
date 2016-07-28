@@ -91,14 +91,32 @@ public class ProfessorController<T extends User> {
 		Professor p = (Professor) u;
 		course.setProfessor(p);
 
-		// // checking if this course exists
-		// if (courseService.getByName(course.getCourseName()) != null) {
-		// System.out.println("This course already exists");
-		// return "redirect:/welcome";
-		// }
-
 		courseService.save(course);
 
 		return "redirect:/welcome";
+	}
+
+	@RequestMapping(value = "/user/update/professor")
+	public ModelAndView updateProfessor(HttpSession session) {
+		Professor s = (Professor) session.getAttribute("loggedUser");
+		return new ModelAndView("update_student", "user", s);
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/user/update/professor", method = RequestMethod.POST)
+	public String updatedUser(@ModelAttribute("user") @Validated Professor user, BindingResult result,
+			HttpSession session) {
+
+		if (result.hasErrors()) {
+			return "update_professor";
+		}
+
+		Professor formerProf = (Professor) session.getAttribute("loggedUser");
+
+		Professor p = (Professor) userService.getById(formerProf.getId(), "Professor");
+		user.id = p.getId();
+		userService.save((T) user);
+		session.setAttribute("loggedUser", user);
+		return "redirect:/user";
 	}
 }

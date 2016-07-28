@@ -4,16 +4,23 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.courses.model.Professor;
+import com.courses.model.Student;
+import com.courses.model.User;
 import com.courses.service.CourseService;
 import com.courses.service.StudentService;
+import com.courses.service.UserService;
+import com.courses.util.UserValidator;
 
 @Controller
-public class MainController {
+public class MainController<T extends User> {
 
 	public final String Student = "STUDENT";
 	public final String Professor = "PROFESSOR";
@@ -23,6 +30,17 @@ public class MainController {
 
 	@Autowired
 	CourseService courseService;
+
+	@Autowired
+	UserService<T> userService;
+
+	@Autowired
+	UserValidator<T> userValidator;
+
+	@InitBinder()
+	protected void initBinder(WebDataBinder binder) {
+		binder.setValidator(userValidator);
+	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView printWelcome(HttpSession session) {
@@ -40,15 +58,36 @@ public class MainController {
 
 	@RequestMapping(value = "/newuser", method = RequestMethod.GET)
 	public ModelAndView createUser() {
-		return new ModelAndView("create_user");
+		return new ModelAndView("user_type");
 	}
 
 	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
-	public String newUser(@RequestParam(value = "type") String type) {
+	public ModelAndView newUser(@RequestParam(value = "type") String type) {
 		if (type.equals(Student)) {
-			return "redirect:/newstudent";
+			Student s = new Student();
+			ModelAndView modelAndView = new ModelAndView("create_student");
+			modelAndView.addObject("user", s);
+			return modelAndView;
 		} else {
-			return "redirect:/newprofessor";
+			Professor p = new Professor();
+			ModelAndView modelAndView = new ModelAndView("create_professor");
+			modelAndView.addObject("user", p);
+			return modelAndView;
+		}
+	}
+
+	@RequestMapping(value = "/adduser", method = RequestMethod.GET)
+	public ModelAndView addNewUser(@RequestParam(value = "type") String type) {
+		if (type.equals(Student)) {
+			Student s = new Student();
+			ModelAndView modelAndView = new ModelAndView("create_student");
+			modelAndView.addObject("user", s);
+			return modelAndView;
+		} else {
+			Professor p = new Professor();
+			ModelAndView modelAndView = new ModelAndView("create_professor");
+			modelAndView.addObject("user", p);
+			return modelAndView;
 		}
 	}
 
@@ -59,86 +98,34 @@ public class MainController {
 		return modelAndView;
 	}
 
-	// @RequestMapping(value = "/CreateStudent")
-	// public ModelAndView createStudent() {
-	// return new ModelAndView("create_student", "student", new Student());
-	// }
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public ModelAndView viewUser(HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView("view_user");
+		@SuppressWarnings("unchecked")
+		T user = (T) session.getAttribute("loggedUser");
+		modelAndView.addObject("user", user);
+		return modelAndView;
+	}
 
-	// @RequestMapping(value = "/CheckStudent")
-	// public ModelAndView checkStudent(@ModelAttribute("student") Student
-	// student, HttpSession session) {
-	// session.setAttribute("loggedUser", student);
-	// System.out.println(student);
-	// studentService.save(student);
-	// return new ModelAndView("welcome");
-	// }
+	@RequestMapping(value = "/user/update", method = RequestMethod.GET)
+	public String updateUser(HttpSession session) {
 
-	// @RequestMapping(value = "/ViewCourses")
-	// public ModelAndView viewCourses() {
-	// ModelAndView modelAndView = new ModelAndView("select_course");
-	// modelAndView.addObject("courses", courseService.getAll());
-	// return modelAndView;
-	// }
+		@SuppressWarnings("unchecked")
+		T user = (T) session.getAttribute("loggedUser");
+		if (user.isStudent()) {
+			return "redirect:/user/update/student";
+		} else {
+			return "redirect:/user/update/professor";
+		}
 
-	// @RequestMapping(value = "/EnrollToCourse")
-	// public ModelAndView checkCourse(@RequestParam(value = "course") String
-	// courseName, HttpSession session)
-	// throws Exception {
-	// Student student = (Student) session.getAttribute("loggedUser");
-	// Course course = courseService.getByName(courseName);
-	//
-	// ModelAndView modelAndView = null;
-	//
-	// if (course != null) {
-	// Set<Student> students = course.getStudents();
-	// students.add(student);
-	// course.setStudents(students);
-	//
-	// Set<Course> courses = student.getCourses();
-	// courses.add(course);
-	// student.setCourses(courses);
-	//
-	// courseService.save(course);
-	//
-	// modelAndView = new ModelAndView("welcome");
-	//
-	// // studentService.save(student);
-	// } else {
-	// throw new Exception("Failed to save new student!");
-	// }
-	// return modelAndView;
-	// }
+	}
 
-	// @RequestMapping(value = "/ViewCoursesByUser")
-	// public ModelAndView viewCoursesByUser(HttpSession session) {
-	// User u = (User) session.getAttribute("loggedUser");
-	// ModelAndView modelAndView = new ModelAndView("view_courses");
-	//
-	// @SuppressWarnings("unchecked")
-	// Set<Course> courses = userService.getCourses(u);
-	// modelAndView.addObject("courses", courses);
-	// return modelAndView;
-	// }
-
-	// @RequestMapping(value = "/CreateCourse")
-	// public ModelAndView createCourse() {
-	// ModelAndView modelAndView = new ModelAndView("create_course");
-	// modelAndView.addObject("course", new Course());
-	// return modelAndView;
-	// }
-	//
-	// @RequestMapping(value = "/CheckCourse")
-	// public ModelAndView checkCourse(@ModelAttribute("course") Course course,
-	// HttpSession session) {
-	// User u = (User) session.getAttribute("loggedUser");
-	// Professor p = (Professor) u;
-	// // Set<Course> courses = p.getCourses();
-	// course.setProfessor(p);
-	// // courses.add(course);
-	// // p.setCourses(courses);
-	//
-	// courseService.save(course);
-	// ModelAndView modelAndView = new ModelAndView("welcome");
-	// return modelAndView;
-	// }
+	@RequestMapping(value = "/user/delete", method = RequestMethod.GET)
+	public String deleteUser(HttpSession session) {
+		@SuppressWarnings("unchecked")
+		T user = (T) session.getAttribute("loggedUser");
+		userService.delete(user);
+		session.removeAttribute("loggedUser");
+		return "redirect:/";
+	}
 }

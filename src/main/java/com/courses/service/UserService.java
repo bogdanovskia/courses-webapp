@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.courses.model.Course;
+import com.courses.model.Professor;
 import com.courses.model.User;
 
 public interface UserService<T extends User> {
@@ -20,4 +21,8 @@ public interface UserService<T extends User> {
 	public User getUserByUsername(String username);
 
 	public Set<Course> getCourses(User u);
+
+	public T getById(long id, String string);
+
+	public void deleteCourseFromProfessor(Professor p, Course course);
 }

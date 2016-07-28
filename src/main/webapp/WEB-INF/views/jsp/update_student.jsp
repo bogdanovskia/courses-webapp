@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>New/update user</title>
+<title>Update student</title>
 <style type="text/css">
 .error {
 	color: #ff0000;
@@ -18,7 +18,7 @@
 <body>
 
 	<springForm:form method="POST" commandName="user"
-		action="adduser">
+		action="">
 		<table>
 			<tr>
 				<td>Username:</td>
@@ -66,7 +66,7 @@
 			</tr>
 			
 			<tr>
-				<td colspan="3"><input type="submit" value="Save user"></td>
+				<td colspan="3"><input type="submit" value="Save student"></td>
 			</tr>
 		</table>
 

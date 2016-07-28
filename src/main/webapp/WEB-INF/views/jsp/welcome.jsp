@@ -36,5 +36,6 @@
 			<button type="submit">Log Out</button>
 		</form>
 	</div>
+	<a href = "user">View user</a>
 </body>
 </html>

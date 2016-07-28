@@ -18,7 +18,8 @@
 
         </c:forEach>
     </table>
-
+	
+	
 	<form method = "get" action="../welcome">
 		<button type = "submit">Go back to home page</button>
 	</form>
