@@ -1,5 +1,6 @@
 package com.courses.persistence;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.courses.model.BaseEntity;
 import com.courses.model.Course;
+import com.courses.model.JoinedStudentCourse;
 import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
 import com.courses.model.Professor;
@@ -155,7 +157,11 @@ public class BaseRepository {
 
 	public Set<Course> getCoursesByStudent(long id) {
 		Student student = getById(Student.class, id);
-		return student.getCourses();
+		Set<Course> courses = new HashSet<Course>();
+		for (JoinedStudentCourse joined : student.getJoined()) {
+			courses.add(joined.getCourse());
+		}
+		return courses;
 	}
 
 	public Set<Course> getCoursesByProfessor(Long id) {
@@ -177,5 +183,32 @@ public class BaseRepository {
 			return null;
 		}
 		return lessons.get(0);
+	}
+
+	public JoinedStudentCourse getJoinedByStudentCourse(Student student, Course course) {
+		Query query = em.createQuery(
+				"select c from JoinedStudentCourse as c where c.student = :student and c.course = :course");
+		query.setParameter("student", student);
+		query.setParameter("course", course);
+		List<JoinedStudentCourse> result = query.getResultList();
+		if (result.isEmpty())
+			return null;
+		return result.get(0);
+	}
+
+	public List<JoinedStudentCourse> geJoinedByCourses(Student user) {
+		Query query = em.createQuery("select c from JoinedStudentCourse as c where c.student = :student");
+		query.setParameter("student", user);
+
+		List<JoinedStudentCourse> result = query.getResultList();
+		return result;
+	}
+
+	public List<JoinedStudentCourse> getByCourse(Course course) {
+		Query query = em.createQuery("select c from JoinedStudentCourse as c where c.course = :course");
+		query.setParameter("course", course);
+
+		List<JoinedStudentCourse> result = query.getResultList();
+		return result;
 	}
 }

@@ -1,11 +1,13 @@
 package com.courses.controller;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -17,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.courses.model.Course;
+import com.courses.model.JoinedStudentCourse;
 import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.service.CourseService;
+import com.courses.service.JoinedStudentCourseService;
 import com.courses.service.UserService;
 import com.courses.util.UserValidator;
 
@@ -34,6 +38,9 @@ public class StudentController<T extends User> {
 
 	@Autowired
 	UserValidator<T> userValidator;
+
+	@Autowired
+	JoinedStudentCourseService joinedStudentCourseService;
 
 	@InitBinder("student")
 	protected void initBinder(WebDataBinder binder) {
@@ -61,9 +68,9 @@ public class StudentController<T extends User> {
 
 		}
 
-		session.setAttribute("loggedUser", student);
 		System.out.println(student);
-		userService.save((T) student);
+		student = (Student) userService.save((T) student);
+		session.setAttribute("loggedUser", student);
 		return "welcome";
 	}
 
@@ -73,21 +80,28 @@ public class StudentController<T extends User> {
 		Course course = courseService.getByName(courseName);
 
 		if (course != null) {
-			Set<Student> students = course.getStudents();
+			/*
+			 * Set<Student> students = course.getJoined().getStudents();
+			 * 
+			 * // checking if the student is already enrolled in the course if
+			 * (students.contains(student)) {
+			 * System.out.println("Already enrolled in this course..."); return
+			 * "redirect:/welcome"; } students.add(student);
+			 * course.setStudents(students);
+			 * 
+			 * Set<Course> courses = student.getCourses(); courses.add(course);
+			 * student.setCourses(courses);
+			 * 
+			 * courseService.save(course);
+			 * 
+			 * return "redirect:/welcome";
+			 */
 
-			// checking if the student is already enrolled in the course
-			if (students.contains(student)) {
-				System.out.println("Already enrolled in this course...");
-				return "redirect:/welcome";
-			}
-			students.add(student);
-			course.setStudents(students);
+			JoinedStudentCourse joined = new JoinedStudentCourse();
+			joined.setCourse(course);
+			joined.setStudent(student);
 
-			Set<Course> courses = student.getCourses();
-			courses.add(course);
-			student.setCourses(courses);
-
-			courseService.save(course);
+			joinedStudentCourseService.save(joined);
 
 			return "redirect:/welcome";
 
@@ -120,5 +134,27 @@ public class StudentController<T extends User> {
 		session.setAttribute("loggedUser", user);
 
 		return "redirect:/user";
+	}
+
+	@RequestMapping(value = "/view-favourites")
+	public String viewFavourites(HttpSession session, Model model) {
+
+		@SuppressWarnings("unchecked")
+		T user = (T) session.getAttribute("loggedUser");
+
+		if (!user.isStudent()) {
+			return "redirect:/welcome";
+		}
+
+		List<JoinedStudentCourse> joined = joinedStudentCourseService.getAll();
+		List<Course> courses = new ArrayList<Course>();
+		for (JoinedStudentCourse j : joined) {
+			if (j.isFavourite()) {
+				courses.add(j.getCourse());
+			}
+		}
+		model.addAttribute("courses", courses);
+		return "view_favourites";
+
 	}
 }

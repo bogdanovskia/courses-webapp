@@ -12,8 +12,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,41 +30,34 @@ public class Course extends BaseEntity {
 	@Column(unique = true)
 	private String courseName;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+	/*
+	 * @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	 * 
+	 * @JoinTable(name = "student_course", joinColumns = @JoinColumn(name =
+	 * "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+	 * 
+	 * @JsonManagedReference
+	 * 
+	 * @Column(nullable = true) private Set<Student> students;
+	 */
+
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ElementCollection(targetClass = JoinedStudentCourse.class)
 	@JsonManagedReference
 	@Column(nullable = true)
-	private Set<Student> students;
+	private Set<JoinedStudentCourse> joined = new HashSet<JoinedStudentCourse>();
 
 	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@ElementCollection(targetClass = Lesson.class)
 	@JsonManagedReference
 	@Column(nullable = true)
-	private List<Lesson> lessons;
+	private List<Lesson> lessons = new ArrayList<Lesson>();
 
 	@ManyToOne(targetEntity = Professor.class)
 	@JoinColumn(name = "professor_id")
 	@JsonBackReference
 	@NotNull
 	private Professor professor;
-
-	public Professor getProfessor() {
-		return professor;
-	}
-
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
-	}
-
-	public Course() {
-		courseName = "";
-		students = new HashSet<Student>();
-		lessons = new ArrayList<Lesson>();
-	}
-
-	public Course(String courseName) {
-		this.courseName = courseName;
-	}
 
 	public String getCourseName() {
 		return courseName;
@@ -76,13 +67,12 @@ public class Course extends BaseEntity {
 		this.courseName = courseName;
 	}
 
-	public Set<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(Set<Student> students) {
-		this.students = students;
-	}
+	/*
+	 * public Set<Student> getStudents() { return students; }
+	 * 
+	 * public void setStudents(Set<Student> students) { this.students =
+	 * students; }
+	 */
 
 	public List<Lesson> getLessons() {
 		Collections.sort(lessons);
@@ -91,6 +81,14 @@ public class Course extends BaseEntity {
 
 	public void setLessons(List<Lesson> lessons) {
 		this.lessons = lessons;
+	}
+
+	public Professor getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
 	}
 
 	@Override
@@ -121,6 +119,14 @@ public class Course extends BaseEntity {
 		} else if (!courseName.equals(other.courseName))
 			return false;
 		return true;
+	}
+
+	public Set<JoinedStudentCourse> getJoined() {
+		return joined;
+	}
+
+	public void setJoined(Set<JoinedStudentCourse> joined) {
+		this.joined = joined;
 	}
 
 }

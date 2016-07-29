@@ -100,7 +100,7 @@
 			</div>
 		</div>
 	</c:if>
-	<a href = "${lesson.getId()}/delete-lesson">Delete lesson</a>
+	<c:if test="${!sessionScope.loggedUser.isStudent()}"> <a href = "${lesson.getId()}/delete-lesson">Delete lesson</a> </c:if>
 	<a href = "../../${lesson.getCourse().getId()}">Back to course page</a>
 </body>
 </html>

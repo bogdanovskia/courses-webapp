@@ -37,5 +37,6 @@
 		</form>
 	</div>
 	<a href = "user">View user</a>
+	<a href = "view-favourites">View favourite courses</a>
 </body>
 </html>

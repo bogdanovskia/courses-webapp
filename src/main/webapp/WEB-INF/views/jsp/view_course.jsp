@@ -23,6 +23,8 @@
 		</form>
 	</c:if>
 	
+	<c:if test="${loggedUser.isStudent()}"><a href = "${course.getId()}/add-to-favourite">Add to favourite courses!</a></c:if>
+	
 	<c:if test="${!loggedUser.isStudent()}">
 		<a href = "${course.getId()}/delete">Delete course</a>
 	</c:if>

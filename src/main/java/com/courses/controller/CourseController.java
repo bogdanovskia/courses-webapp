@@ -1,6 +1,7 @@
 package com.courses.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,10 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.courses.model.Course;
 import com.courses.model.FileBucket;
+import com.courses.model.JoinedStudentCourse;
 import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
+import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.service.CourseService;
+import com.courses.service.JoinedStudentCourseService;
 import com.courses.service.LessonDocumentService;
 import com.courses.service.LessonService;
 import com.courses.service.UserService;
@@ -56,6 +60,9 @@ public class CourseController<T extends User> {
 	@Autowired
 	LessonValidator lessonValidator;
 
+	@Autowired
+	JoinedStudentCourseService joinedStudentCourseService;
+
 	@InitBinder("fileBucket")
 	protected void initBinder(WebDataBinder binder) {
 		binder.setValidator(fileValidator);
@@ -66,7 +73,7 @@ public class CourseController<T extends User> {
 		binder.setValidator(lessonValidator);
 	}
 
-	@RequestMapping(value = "")
+	@RequestMapping(value = "/")
 	public ModelAndView viewCoursesByUser(HttpSession session) {
 		User u = (User) session.getAttribute("loggedUser");
 		ModelAndView modelAndView = new ModelAndView("view_courses");
@@ -76,12 +83,22 @@ public class CourseController<T extends User> {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "{id}")
+	@RequestMapping(value = "/{id}")
 	public ModelAndView viewCourse(@PathVariable("id") long id) {
 		Course course = courseService.getById(id);
 		ModelAndView modelAndView = new ModelAndView("view_course");
 		modelAndView.addObject("course", course);
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/{id}/add-to-favourite")
+	public String addToFavourites(@PathVariable("id") long id, HttpSession session) throws Exception {
+		Course course = courseService.getById(id);
+		Student student = (Student) session.getAttribute("loggedUser");
+		JoinedStudentCourse joined = joinedStudentCourseService.getByStudentCourse(student, course);
+		joined.setFavourite(true);
+		joinedStudentCourseService.save(joined);
+		return "redirect:/view-courses-user/" + id;
 	}
 
 	@RequestMapping(value = "/{id}/delete")
@@ -92,6 +109,10 @@ public class CourseController<T extends User> {
 			lessonDocumentService.deleteAllOfLesson(l);
 		}
 		lessonService.deleteAllOfCourse(course);
+		List<JoinedStudentCourse> joined = joinedStudentCourseService.getByCourse(course);
+		for (JoinedStudentCourse j : joined) {
+			joinedStudentCourseService.delete(j);
+		}
 		courseService.delete(course);
 		return "redirect:/view-courses-user/";
 	}

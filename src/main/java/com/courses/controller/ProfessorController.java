@@ -66,9 +66,9 @@ public class ProfessorController<T extends User> {
 
 		}
 
-		session.setAttribute("loggedUser", professor);
 		System.out.println(professor);
-		userService.save((T) professor);
+		professor = (Professor) userService.save((T) professor);
+		session.setAttribute("loggedUser", professor);
 		return "welcome";
 	}
 

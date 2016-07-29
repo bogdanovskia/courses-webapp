@@ -1,4 +1,4 @@
-package com.courses.persistence;
+package com.courses.persistence.implementation;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.courses.model.LessonDocument;
+import com.courses.persistence.BaseRepository;
+import com.courses.persistence.LessonDocumentRepository;
 
 @Repository
 public class LessonDocumentRepositoryImplementation implements LessonDocumentRepository {
