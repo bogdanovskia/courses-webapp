@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.courses.model.Course;
 import com.courses.model.User;
+import com.courses.model.UserRole;
 import com.courses.persistence.BaseRepository;
 import com.courses.persistence.UserRepository;
 
@@ -47,6 +48,10 @@ public class UserRepositoryImplementation<T extends User> implements UserReposit
 		} else
 			return baseRepository.getCoursesByProfessor(u.getId());
 
+	}
+
+	public Set<UserRole> getRoles(User user) {
+		return baseRepository.getRolesForUser(user.getUsername());
 	}
 
 }

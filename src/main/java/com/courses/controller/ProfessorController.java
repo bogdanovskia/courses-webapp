@@ -16,7 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.courses.model.Course;
 import com.courses.model.Professor;
 import com.courses.model.User;
+import com.courses.model.UserRole;
 import com.courses.service.CourseService;
+import com.courses.service.UserRoleService;
 import com.courses.service.UserService;
 import com.courses.util.CourseValidator;
 import com.courses.util.UserValidator;
@@ -35,6 +37,9 @@ public class ProfessorController<T extends User> {
 
 	@Autowired
 	CourseValidator courseValidator;
+
+	@Autowired
+	UserRoleService userRoleService;
 
 	@InitBinder("professor")
 	protected void initBinder(WebDataBinder binder) {
@@ -69,7 +74,13 @@ public class ProfessorController<T extends User> {
 		System.out.println(professor);
 		professor = (Professor) userService.save((T) professor);
 		session.setAttribute("loggedUser", professor);
-		return "welcome";
+
+		UserRole u = new UserRole();
+		u.setUsername(professor.getUsername());
+		u.setRole("ROLE_USER");
+		userRoleService.save(u);
+
+		return "login";
 	}
 
 	@RequestMapping(value = "/create-course")

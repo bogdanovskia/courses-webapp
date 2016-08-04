@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.courses.model.Course;
 import com.courses.model.User;
+import com.courses.model.UserRole;
 
 public interface UserRepository<T extends User> {
 	public User save(User s);
@@ -20,4 +21,6 @@ public interface UserRepository<T extends User> {
 	public T getUserByUsername(String username);
 
 	public Set<Course> getCourses(User u);
+
+	public Set<UserRole> getRoles(com.courses.model.User user);
 }

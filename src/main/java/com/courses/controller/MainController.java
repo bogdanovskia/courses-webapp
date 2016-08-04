@@ -1,5 +1,6 @@
 package com.courses.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,17 +43,10 @@ public class MainController<T extends User> {
 		binder.setValidator(userValidator);
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView printWelcome(HttpSession session) {
-		if (session.getAttribute("loggedUser") != null) {
-			return new ModelAndView("welcome");
-		}
-		return new ModelAndView("index");
-
-	}
-
-	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
-	public ModelAndView welcome() {
+	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
+	public ModelAndView viewWelcome(HttpSession session, HttpServletRequest request) {
+		User user = userService.getUserByUsername(request.getUserPrincipal().getName());
+		session.setAttribute("loggedUser", user);
 		return new ModelAndView("welcome");
 	}
 

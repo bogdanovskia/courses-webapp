@@ -15,8 +15,7 @@
 		<!-- Spring -->
 		<spring-io-platform.version>1.1.3.RELEASE</spring-io-platform.version>
 		<spring-data-jdbc.version>1.1.0.RELEASE</spring-data-jdbc.version>
-		<spring.version>4.1.6.RELEASE</spring.version>
-
+		<spring.version>4.2.5.RELEASE</spring.version>
 
 		<!-- Java EE / Java SE dependencies -->
 		<tomcat.version>7.0.59</tomcat.version>
@@ -42,6 +41,8 @@
 		<cobertura.version>2.7</cobertura.version>
 		<commons-fileupload.version>1.2.1</commons-fileupload.version>
 
+		<!-- Spring Security -->
+		<spring-security.version>4.0.2.RELEASE</spring-security.version>
 	</properties>
 
 	<dependencyManagement>
@@ -308,6 +309,26 @@
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
+		</dependency>
+
+		<!-- Spring Security -->
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
 		</dependency>
 
 

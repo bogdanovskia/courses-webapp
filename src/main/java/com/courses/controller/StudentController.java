@@ -22,8 +22,10 @@ import com.courses.model.Course;
 import com.courses.model.JoinedStudentCourse;
 import com.courses.model.Student;
 import com.courses.model.User;
+import com.courses.model.UserRole;
 import com.courses.service.CourseService;
 import com.courses.service.JoinedStudentCourseService;
+import com.courses.service.UserRoleService;
 import com.courses.service.UserService;
 import com.courses.util.UserValidator;
 
@@ -41,6 +43,9 @@ public class StudentController<T extends User> {
 
 	@Autowired
 	JoinedStudentCourseService joinedStudentCourseService;
+
+	@Autowired
+	UserRoleService userRoleService;
 
 	@InitBinder("student")
 	protected void initBinder(WebDataBinder binder) {
@@ -71,7 +76,13 @@ public class StudentController<T extends User> {
 		System.out.println(student);
 		student = (Student) userService.save((T) student);
 		session.setAttribute("loggedUser", student);
-		return "welcome";
+
+		UserRole u = new UserRole();
+		u.setUsername(student.getUsername());
+		u.setRole("ROLE_USER");
+		userRoleService.save(u);
+
+		return "login";
 	}
 
 	@RequestMapping(value = "/view-courses/enroll-to-course")

@@ -25,10 +25,6 @@
 			<td>${user.getEmail() }</td>
 		</tr>
 		<tr>
-			<td>Age</td>
-			<td>${user.getAge() }</td>
-		</tr>
-		<tr>
 			<td>Gender</td>
 			<td>${user.getGender() }</td>
 		</tr>

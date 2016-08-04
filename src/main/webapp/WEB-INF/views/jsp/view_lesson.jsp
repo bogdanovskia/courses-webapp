@@ -64,7 +64,7 @@
 			<div class="uploadcontainer">
 				<form:form method="POST" modelAttribute="fileBucket"
 					enctype="multipart/form-data" class="form-horizontal">
-
+				
 					<div class="row">
 						<div class="form-group col-md-12">
 							<label class="col-md-3 control-lable" for="file">Upload a
@@ -95,7 +95,6 @@
 								class="btn btn-primary btn-sm">
 						</div>
 					</div>
-
 				</form:form>
 			</div>
 		</div>

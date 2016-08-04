@@ -46,11 +46,6 @@
 				<td><springForm:errors path="email" cssClass="error" /></td>
 			</tr>
 			<tr>
-				<td>Age:</td>
-				<td><springForm:input path="age" /></td>
-				<td><springForm:errors path="age" cssClass="error" /></td>
-			</tr>
-			<tr>
 				<td>Gender:</td>
 				<td><springForm:select path="gender">
 						<springForm:option value="" label="Select Gender" />

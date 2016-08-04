@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.courses.model.Course;
@@ -26,6 +27,9 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 
 	@Autowired
 	ProfessorRepository professorRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public int delete(User s) {
 		if (s.isStudent()) {
@@ -56,6 +60,7 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 
 	@SuppressWarnings("unchecked")
 	public T save(T s) {
+		s.setPassword(bCryptPasswordEncoder.encode(s.getPassword()));
 		if (s.isStudent()) {
 			return (T) studentRepository.save((Student) s);
 		}

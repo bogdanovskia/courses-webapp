@@ -5,8 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -20,12 +18,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 public abstract class User extends BaseEntity {
 
 	@NotEmpty(message = "Username cannot be empty!")
-	@Size(min = 4, max = 10, message = "Username must between 4 and 10 letters")
+	@Size(min = 4, message = "Username must must be more than 4 characters")
 	@Column(unique = true)
 	protected String username;
 
 	@NotEmpty(message = "Password field cannot be empty!")
-	@Size(min = 2, max = 10, message = "Password must be between 2 and 10 letters long")
+	@Size(min = 2, message = "Password must be more than 4 characters")
+	@Column(columnDefinition = "LONGBLOB")
 	protected String password;
 
 	@NotEmpty(message = "First name cannot be empty")
@@ -40,11 +39,6 @@ public abstract class User extends BaseEntity {
 	@Email()
 	protected String email;
 
-	@NotNull(message = "Age cannot be empty")
-	@Min(value = 15, message = "Must be older than 15 years")
-	@Max(value = 100, message = "Please, stop joking!")
-	protected Integer age;
-
 	@NotNull(message = "Gender cannot be empty")
 	protected Gender gender;
 
@@ -53,6 +47,9 @@ public abstract class User extends BaseEntity {
 	@Past(message = "Date must be in the past")
 
 	protected Date birthday;
+
+	@NotNull
+	private int enabled = 1;
 
 	public enum Gender {
 		MALE, FEMALE
@@ -98,14 +95,6 @@ public abstract class User extends BaseEntity {
 		this.email = email;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public Gender getGender() {
 		return gender;
 	}
@@ -120,6 +109,14 @@ public abstract class User extends BaseEntity {
 
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
 	}
 
 	public abstract boolean isStudent();

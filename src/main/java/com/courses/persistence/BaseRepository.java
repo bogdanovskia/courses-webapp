@@ -26,6 +26,7 @@ import com.courses.model.LessonDocument;
 import com.courses.model.Professor;
 import com.courses.model.Student;
 import com.courses.model.User;
+import com.courses.model.UserRole;
 import com.courses.persistence.helper.PredicateBuilder;
 
 @Repository
@@ -210,5 +211,17 @@ public class BaseRepository {
 
 		List<JoinedStudentCourse> result = query.getResultList();
 		return result;
+	}
+
+	public Set<UserRole> getRolesForUser(String username) {
+		Query query = em.createQuery("select c from UserRole as c where c.username = :username");
+		query.setParameter("username", username);
+
+		List<UserRole> roles = query.getResultList();
+		Set<UserRole> userRoles = new HashSet<UserRole>();
+		for (UserRole u : roles) {
+			userRoles.add(u);
+		}
+		return userRoles;
 	}
 }
