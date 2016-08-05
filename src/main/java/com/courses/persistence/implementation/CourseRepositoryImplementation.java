@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.courses.model.Course;
+import com.courses.model.Lesson;
 import com.courses.persistence.BaseRepository;
 import com.courses.persistence.CourseRepository;
 
@@ -33,6 +34,10 @@ public class CourseRepositoryImplementation implements CourseRepository {
 
 	public Course getByName(String courseName) {
 		return baseRepository.getCourseByName(courseName);
+	}
+
+	public List<Lesson> getLessonsByCourse(long id) {
+		return baseRepository.getLessonsByCourse(id);
 	}
 
 	// @Override

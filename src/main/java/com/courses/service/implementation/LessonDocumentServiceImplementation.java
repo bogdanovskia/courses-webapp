@@ -54,4 +54,8 @@ public class LessonDocumentServiceImplementation implements LessonDocumentServic
 		}
 	}
 
+	public List<LessonDocument> getByLessonId(long id) {
+		return lessonDocumentRepository.getByLessonId(id);
+	}
+
 }

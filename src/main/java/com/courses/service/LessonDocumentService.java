@@ -20,4 +20,6 @@ public interface LessonDocumentService {
 
 	void deleteAllOfLesson(Lesson l);
 
+	List<LessonDocument> getByLessonId(long id);
+
 }

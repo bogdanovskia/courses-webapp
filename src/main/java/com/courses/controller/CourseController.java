@@ -26,12 +26,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.courses.model.Course;
 import com.courses.model.FileBucket;
 import com.courses.model.JoinedStudentCourse;
+import com.courses.model.JoinedStudentLesson;
 import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
 import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.service.CourseService;
 import com.courses.service.JoinedStudentCourseService;
+import com.courses.service.JoinedStudentLessonService;
 import com.courses.service.LessonDocumentService;
 import com.courses.service.LessonService;
 import com.courses.service.UserService;
@@ -63,6 +65,9 @@ public class CourseController<T extends User> {
 	@Autowired
 	JoinedStudentCourseService joinedStudentCourseService;
 
+	@Autowired
+	JoinedStudentLessonService joinedStudentLessonService;
+
 	@InitBinder("fileBucket")
 	protected void initBinder(WebDataBinder binder) {
 		binder.setValidator(fileValidator);
@@ -84,10 +89,27 @@ public class CourseController<T extends User> {
 	}
 
 	@RequestMapping(value = "/{id}")
-	public ModelAndView viewCourse(@PathVariable("id") long id) {
+	public ModelAndView viewCourse(@PathVariable("id") long id, HttpSession session) {
 		Course course = courseService.getById(id);
 		ModelAndView modelAndView = new ModelAndView("view_course");
+
+		course.setLessons(courseService.getLessonsByCourse(course.getId()));
+		System.out.println("///////////");
+		System.out.println(course.getLessons());
+		System.out.println("///////////");
 		modelAndView.addObject("course", course);
+
+		User user = (User) session.getAttribute("loggedUser");
+		if (user.isStudent()) {
+			List<JoinedStudentLesson> joinedLessons = joinedStudentLessonService.getByCourseAndStudent(id,
+					user.getId());
+			for (JoinedStudentLesson j : joinedLessons) {
+				System.out.println(j.getLesson().getTitle());
+			}
+			modelAndView.addObject("lessons", joinedLessons);
+
+		}
+
 		return modelAndView;
 	}
 
@@ -105,14 +127,6 @@ public class CourseController<T extends User> {
 	public String deleteCourse(@PathVariable("id") long id, HttpSession session) {
 		Course course = courseService.getById(id);
 
-		for (Lesson l : course.getLessons()) {
-			lessonDocumentService.deleteAllOfLesson(l);
-		}
-		lessonService.deleteAllOfCourse(course);
-		List<JoinedStudentCourse> joined = joinedStudentCourseService.getByCourse(course);
-		for (JoinedStudentCourse j : joined) {
-			joinedStudentCourseService.delete(j);
-		}
 		courseService.delete(course);
 		return "redirect:/view-courses-user/";
 	}
@@ -142,20 +156,33 @@ public class CourseController<T extends User> {
 
 		Course course = courseService.getById(id);
 		lesson.setCourse(course);
-		// course.getLessons().add(lesson);
 		lessonService.save(lesson);
 		return "redirect:/view-courses-user/" + id;
 	}
 
 	@RequestMapping(value = "/{id}/viewlesson/{l-id}", method = RequestMethod.GET)
-	public ModelAndView viewLesson(@PathVariable("id") long id, @PathVariable("l-id") long lid) {
+	public ModelAndView viewLesson(@PathVariable("id") long id, @PathVariable("l-id") long lid, HttpSession session) {
 		Lesson lesson = lessonService.getById(lid);
 
 		ModelAndView modelAndView = new ModelAndView("view_lesson");
+
+		lesson.setLessonDocuments(lessonDocumentService.getByLessonId(lesson.getId()));
+
 		modelAndView.addObject("lesson", lesson);
 		System.out.println(lesson.getVideos().size());
 		modelAndView.addObject("videos", lesson.getVideos());
 		modelAndView.addObject("fileBucket", new FileBucket());
+
+		User user = (User) session.getAttribute("loggedUser");
+		if (user.isStudent()) {
+			Student student = (Student) user;
+			JoinedStudentLesson j = joinedStudentLessonService.getByIdAndStudent(lid, student.getId());
+			if (j != null) {
+				j.setPassed(true);
+				joinedStudentLessonService.save(j);
+			}
+		}
+
 		return modelAndView;
 	}
 

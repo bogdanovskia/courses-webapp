@@ -1,5 +1,6 @@
 package com.courses.controller;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +17,8 @@ import com.courses.model.Professor;
 import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.service.CourseService;
+import com.courses.service.JoinedStudentCourseService;
+import com.courses.service.JoinedStudentLessonService;
 import com.courses.service.StudentService;
 import com.courses.service.UserService;
 import com.courses.util.UserValidator;
@@ -36,6 +39,12 @@ public class MainController<T extends User> {
 	UserService<T> userService;
 
 	@Autowired
+	JoinedStudentCourseService joinedStudentCourseService;
+
+	@Autowired
+	JoinedStudentLessonService joinedStudentLessonService;
+
+	@Autowired
 	UserValidator<T> userValidator;
 
 	@InitBinder()
@@ -46,6 +55,9 @@ public class MainController<T extends User> {
 	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
 	public ModelAndView viewWelcome(HttpSession session, HttpServletRequest request) {
 		User user = userService.getUserByUsername(request.getUserPrincipal().getName());
+		if (user == null) {
+			return new ModelAndView("login");
+		}
 		session.setAttribute("loggedUser", user);
 		return new ModelAndView("welcome");
 	}
@@ -115,11 +127,13 @@ public class MainController<T extends User> {
 	}
 
 	@RequestMapping(value = "/user/delete", method = RequestMethod.GET)
-	public String deleteUser(HttpSession session) {
+	public String deleteUser(HttpSession session, HttpServletRequest request) throws ServletException {
 		@SuppressWarnings("unchecked")
 		T user = (T) session.getAttribute("loggedUser");
+
 		userService.delete(user);
 		session.removeAttribute("loggedUser");
+		request.logout();
 		return "redirect:/";
 	}
 }

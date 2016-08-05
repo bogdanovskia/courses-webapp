@@ -35,4 +35,8 @@ public class LessonDocumentRepositoryImplementation implements LessonDocumentRep
 		return baseRepository.getDocumentsByLesson(id);
 	}
 
+	public List<LessonDocument> getByLessonId(long id) {
+		return baseRepository.getDocumentsByLesson(id);
+	}
+
 }

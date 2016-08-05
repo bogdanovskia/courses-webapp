@@ -15,4 +15,6 @@ public interface LessonDocumentRepository {
 
 	int deleteById(long id);
 
+	List<LessonDocument> getByLessonId(long id);
+
 }

@@ -20,11 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.courses.model.Course;
 import com.courses.model.JoinedStudentCourse;
+import com.courses.model.JoinedStudentLesson;
+import com.courses.model.Lesson;
 import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.model.UserRole;
 import com.courses.service.CourseService;
 import com.courses.service.JoinedStudentCourseService;
+import com.courses.service.JoinedStudentLessonService;
 import com.courses.service.UserRoleService;
 import com.courses.service.UserService;
 import com.courses.util.UserValidator;
@@ -46,6 +49,9 @@ public class StudentController<T extends User> {
 
 	@Autowired
 	UserRoleService userRoleService;
+
+	@Autowired
+	JoinedStudentLessonService joinedStudentLessonService;
 
 	@InitBinder("student")
 	protected void initBinder(WebDataBinder binder) {
@@ -108,11 +114,31 @@ public class StudentController<T extends User> {
 			 * return "redirect:/welcome";
 			 */
 
+			if (joinedStudentCourseService.getByStudentCourse(student, course) != null) {
+				return "redirect:/welcome";
+			}
+
 			JoinedStudentCourse joined = new JoinedStudentCourse();
 			joined.setCourse(course);
 			joined.setStudent(student);
 
 			joinedStudentCourseService.save(joined);
+
+			ArrayList<JoinedStudentLesson> joinedLessons = new ArrayList<JoinedStudentLesson>();
+			for (Lesson l : course.getLessons()) {
+				if (joinedStudentLessonService.getByIdAndStudent(l.getId(), student.getId()) != null) {
+					continue;
+				}
+				JoinedStudentLesson joinedLesson = new JoinedStudentLesson();
+				joinedLesson.setLesson(l);
+				joinedLesson.setPassed(false);
+				joinedLesson.setStudent(student);
+				joinedLessons.add(joinedLesson);
+			}
+
+			for (JoinedStudentLesson j : joinedLessons) {
+				joinedStudentLessonService.save(j);
+			}
 
 			return "redirect:/welcome";
 
@@ -157,7 +183,7 @@ public class StudentController<T extends User> {
 			return "redirect:/welcome";
 		}
 
-		List<JoinedStudentCourse> joined = joinedStudentCourseService.getAll();
+		List<JoinedStudentCourse> joined = joinedStudentCourseService.getByStudent((Student) user);
 		List<Course> courses = new ArrayList<Course>();
 		for (JoinedStudentCourse j : joined) {
 			if (j.isFavourite()) {

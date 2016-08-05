@@ -3,6 +3,7 @@ package com.courses.service;
 import java.util.List;
 
 import com.courses.model.Course;
+import com.courses.model.Lesson;
 
 public interface CourseService {
 
@@ -15,4 +16,6 @@ public interface CourseService {
 	public List<Course> getAll();
 
 	public Course getByName(String courseName);
+
+	public List<Lesson> getLessonsByCourse(long id);
 }

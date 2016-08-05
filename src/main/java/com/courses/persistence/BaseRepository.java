@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.courses.model.BaseEntity;
 import com.courses.model.Course;
 import com.courses.model.JoinedStudentCourse;
+import com.courses.model.JoinedStudentLesson;
 import com.courses.model.Lesson;
 import com.courses.model.LessonDocument;
 import com.courses.model.Professor;
@@ -171,8 +172,10 @@ public class BaseRepository {
 	}
 
 	public List<LessonDocument> getDocumentsByLesson(long id) {
-		Lesson l = getById(Lesson.class, id);
-		return l.getLessonDocuments();
+		Query query = em.createQuery("select l from LessonDocument as l where l.lesson.id = :id");
+		query.setParameter("id", id);
+		List<LessonDocument> result = query.getResultList();
+		return result;
 	}
 
 	public Lesson getLessonByName(String title) {
@@ -223,5 +226,37 @@ public class BaseRepository {
 			userRoles.add(u);
 		}
 		return userRoles;
+	}
+
+	public JoinedStudentLesson getByIdAndStudent(long lid, long id) {
+		Query query = em
+				.createQuery("select l from JoinedStudentLesson as l where l.lesson.id = :lid and l.student.id = :sid");
+		query.setParameter("lid", lid);
+		query.setParameter("sid", id);
+
+		List<JoinedStudentLesson> result = query.getResultList();
+		if (result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
+	}
+
+	public List<JoinedStudentLesson> getByCourseAndStudent(long id, long id2) {
+		Query query = em.createQuery(
+				"select l from JoinedStudentLesson as l where l.lesson.course.id = :cid and l.student.id = :sid");
+		query.setParameter("cid", id);
+		query.setParameter("sid", id2);
+
+		List<JoinedStudentLesson> result = query.getResultList();
+		System.out.println("RESULT:");
+		System.out.println(result);
+		return result;
+	}
+
+	public List<Lesson> getLessonsByCourse(long id) {
+		Query query = em.createQuery("select l from Lesson as l where l.course.id = :id");
+		query.setParameter("id", id);
+		List<Lesson> result = query.getResultList();
+		return result;
 	}
 }

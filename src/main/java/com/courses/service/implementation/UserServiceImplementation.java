@@ -8,12 +8,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.courses.model.Course;
+import com.courses.model.JoinedStudentCourse;
+import com.courses.model.JoinedStudentLesson;
 import com.courses.model.Professor;
 import com.courses.model.Student;
 import com.courses.model.User;
 import com.courses.persistence.ProfessorRepository;
 import com.courses.persistence.StudentRepository;
 import com.courses.persistence.UserRepository;
+import com.courses.service.CourseService;
+import com.courses.service.JoinedStudentCourseService;
+import com.courses.service.JoinedStudentLessonService;
 import com.courses.service.UserService;
 
 @Service
@@ -29,13 +34,37 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 	ProfessorRepository professorRepository;
 
 	@Autowired
+	JoinedStudentLessonService joinedStudentLessonService;
+
+	@Autowired
+	JoinedStudentCourseService joinedStudentCourseService;
+
+	@Autowired
+	CourseService courseService;
+
+	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public int delete(User s) {
-		if (s.isStudent()) {
-			return studentRepository.delete((Student) s);
-		} else
-			return professorRepository.delete((Professor) s);
+	public int delete(User user) {
+		if (user.isStudent()) {
+			Student s = (Student) user;
+			for (JoinedStudentLesson j : joinedStudentLessonService.getAll()) {
+				if (j.getStudent().equals(s)) {
+					joinedStudentLessonService.delete(j);
+				}
+			}
+			for (JoinedStudentCourse j : s.getJoined()) {
+				joinedStudentCourseService.delete(j);
+			}
+			return studentRepository.delete(s);
+		} else {
+			Professor p = (Professor) user;
+			for (Course c : p.getCourses()) {
+				courseService.delete(c);
+			}
+			return professorRepository.delete(p);
+		}
+
 	}
 
 	public User getById(long id) {
@@ -76,10 +105,6 @@ public class UserServiceImplementation<T extends User> implements UserService<T>
 
 	public void deleteCourseFromProfessor(Professor p, Course course) {
 		p.getCourses().remove(course);
-		System.out.println();
-		System.out.println("DAAAAA");
-		System.out.println(p.getCourses());
-		System.out.println();
 		professorRepository.save(p);
 	}
 
